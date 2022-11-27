@@ -1,0 +1,7 @@
+latex/
+html/
+Doxyfile
+.swp
+.vscode/
+.vs/
+out/

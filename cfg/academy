@@ -1,0 +1,71 @@
+3
+summonable
+1
+summoner
+100
+0
+Summoner
+8
+max_hp 5000
+cur_hp 5000
+priority 6
+summon_range 10
+max_energy 1000
+cur_energy 1000
+xp 10000
+energy_regen_speed 0.5
+nonmoving
+1
+obstacle
+100
+0
+Obstacle
+3
+max_hp 300
+cur_hp 300
+priority 0
+parallel_universes
+3
+kaneki
+200
+0
+GeneralSquad
+8
+max_hp 1200
+cur_hp 1200
+priority 3
+damage 4
+velocity 0.0133
+quantity 1
+xp_for_destroying 3
+attack_range 2
+naruto
+300
+0
+MoralSquad
+10
+max_hp 1500
+cur_hp 1500
+priority 4
+damage 4
+velocity 0.0122
+quantity 1
+xp_for_destroying 3
+attack_range 2
+morality 12
+stabilization_speed 0.03
+tsunade
+350
+0
+MoralSquad
+10
+max_hp 700
+cur_hp 700
+priority 4
+damage 4
+velocity 0.0122
+quantity 1
+xp_for_destroying 3
+attack_range 2
+morality 12
+stabilization_speed 0.03
