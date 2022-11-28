@@ -42,12 +42,16 @@ void Client::act() {
     auto next_frame = std::chrono::system_clock::now() + frames{1};
     std::string to_send;
     send(sfd_, default_msg.c_str(), 100, 0);
+    int received_bytes = 0;
     while (true) {
-        if (recv(sfd_, buf, 10000, 0) != 10000) {
-            continue;
+        received_bytes = recv(sfd_, buf, 10000, 0);
+            
+        //std::cout << "Receieved:\n" << buf << std::endl;
+
+        if (received_bytes == 10000) {
+            handleData(buf);
         }
-        std::cout << "Receieved:\n" << buf << std::endl;
-        handleData(buf);
+
         if (std::chrono::system_clock::now() >= next_frame) {
             drawer_->draw();
             next_frame += frames{1};
@@ -64,7 +68,7 @@ void Client::act() {
 
 std::string Client::getMessageFromEvent(const std::string& default_msg) {
     std::string to_send = default_msg;
-    static std::string prev_to_send = default_msg;
+    //static std::string prev_to_send = default_msg;
 
     std::pair<std::string, Point> caught;
     SDL_Event event;
@@ -82,7 +86,7 @@ std::string Client::getMessageFromEvent(const std::string& default_msg) {
             break;
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_a) {
-                to_send = prev_to_send;
+      //          to_send = prev_to_send;
             }
             break;
         default:

@@ -28,7 +28,10 @@ public:
         return std::shared_ptr<Entity>(new MoralHealingSquad(*this));
     }
 
+public:
     void act() override;
+
+protected:
     void heal() override;
     void update() override;
 };

@@ -53,7 +53,10 @@ public:
 
     void stabilizeMorality();
 
+public:
     void act() override;
+
+protected:
     void update() override;
     void attack() override;
     void giveDamage() override;

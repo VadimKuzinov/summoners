@@ -52,6 +52,12 @@ add_custom_command ( TARGET client POST_BUILD
     $<TARGET_FILE:SDL2ttf> $<TARGET_FILE_DIR:client>
 )
 
+option(MY_PROJECT_TESTS "Build unit tests" ON)
+
+if(MY_PROJECT_TESTS)
+    enable_testing()
+endif()
+
 include(FetchContent)
 FetchContent_Declare(
   googletest

@@ -48,8 +48,11 @@ public:
         return healing_;
     }
 
-    virtual void heal();
+public:
     void act() override;
+
+protected:
     void update() override;
+    virtual void heal();
 };
 
