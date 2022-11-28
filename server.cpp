@@ -1,10 +1,10 @@
 #include "server/Server.h"
-#include <iostream>
 
 
-int main() {
-    Server server;
-    server.createGame("../../../cfg/academy", "../../../cfg/map3");
-    server.run<64>();
+int main(int argc, char* argv[]) {
+    Server()
+        .startListeningOnPort(1337)
+        .createGame("../../../cfg/academy", "../../../cfg/map3")
+        .runWithFps<60>();
     return 0;
 }

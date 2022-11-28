@@ -49,8 +49,18 @@ School& Academy::operator[](const std::string& name) {
     return schools_[name];
 }
 
+const School& Academy::operator[](const std::string& name) const {
+    auto it = schools_.find(name);
+    return it->second;
+}
+
 Ability& School::operator[](const std::string& name) {
     return abilities_[name];
+}
+
+const Ability& School::operator[](const std::string& name) const {
+    auto it = abilities_.find(name);
+    return it->second;
 }
 
 std::shared_ptr<Entity> Ability::getModel() const {

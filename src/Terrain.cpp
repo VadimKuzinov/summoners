@@ -60,13 +60,12 @@ std::istream& operator>>(std::istream& is, Terrain& terrain) {
     std::string school, ability;
     while (qty--) {
         is >> coords >> school >> ability;
-        std::cout << coords << school << ability << std::endl;
-        terrain.addSquad(terrain.academy_[school][ability].getModel(), coords);
+        //std::cout << coords << school << ability << std::endl;
+        terrain.addSquad(terrain.getAcademy()[school][ability].getModel(), coords);
     }
 
     return is;
 }
-
 
 void Terrain::transferSquadToEmptyPlace(std::shared_ptr<Entity> squad, Point target_coords) {
     auto cur_coords = Point::withIntCfs(squad->getCoords());

@@ -38,11 +38,15 @@ public:
         return summoners_.second;
     }
 
-    Academy& getAcademy() {
+    const Academy& getAcademy() {
         return academy_;
     }
 
     Map& getMap() {
+        return map_;
+    }
+
+    const Map& getMap() const {
         return map_;
     }
 

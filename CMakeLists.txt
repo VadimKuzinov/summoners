@@ -51,3 +51,17 @@ add_custom_command ( TARGET client POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_FILE:SDL2ttf> $<TARGET_FILE_DIR:client>
 )
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  # Specify the commit you depend on and update it regularly.
+  URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+add_executable(testing exampletest.cpp)
+target_link_libraries(testing gtest_main game)
+add_test(NAME nametest COMMAND testing)

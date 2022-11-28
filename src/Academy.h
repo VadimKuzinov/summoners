@@ -59,12 +59,15 @@ private:
     double required_xp_for_upgrading_ = 15;
     friend std::istream& operator>>(std::istream&, School&);
 
+private:
+    Ability& operator[](const std::string&);
+
 public:
     const std::string& getName() const {
         return name_;
     }
 
-    Ability& operator[](const std::string&);
+    const Ability& operator[](const std::string&) const;
 
     const std::vector<std::string>& getAbilityNames() const {
         return ability_names_;
@@ -85,8 +88,11 @@ private:
     std::unordered_map<std::string, School> schools_;
     friend std::istream& operator>>(std::istream&, Academy&);
 
-public:
+private:
     School& operator[](const std::string&);
+
+public:
+    const School& operator[](const std::string&) const;
 
     const std::vector<std::string>& getSchoolNames() const {
         return school_names_;

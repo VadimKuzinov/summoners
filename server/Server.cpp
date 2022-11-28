@@ -4,7 +4,7 @@
 #include <sstream>
 
 
-Server::Server() {
+Server& Server::startListeningOnPort(unsigned short port) {
 #ifdef _WIN32
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -17,10 +17,12 @@ Server::Server() {
     struct sockaddr_in socket_info;
     socket_info.sin_family = AF_INET;
     socket_info.sin_addr.s_addr = INADDR_ANY;
-    socket_info.sin_port = htons(1337);
+    socket_info.sin_port = htons(port);
 
     bind(server_socket_, (struct sockaddr*)&socket_info, sizeof(socket_info));
     listen(server_socket_, 3);
+
+    return *this;
 }
 
 void Server::interactWithClient(SOCKET sfd, std::shared_ptr<Player> player) {

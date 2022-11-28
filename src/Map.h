@@ -28,6 +28,10 @@ public:
         return map_[static_cast<std::size_t>(coords.y)][static_cast<std::size_t>(coords.x)];
     }
     
+    const std::shared_ptr<const Entity>& operator[](Point coords) const {
+        return map_[static_cast<std::size_t>(coords.y)][static_cast<std::size_t>(coords.x)];
+    }
+
     void clearCorpses();
     void addSquad(std::shared_ptr<Entity>, Point);
 

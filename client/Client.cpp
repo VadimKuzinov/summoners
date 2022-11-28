@@ -20,7 +20,7 @@
 #include <chrono>
 
 
-void Client::connectToServer() {
+Client& Client::connectToServerOnPort(unsigned short port) {
 #ifdef _WIN32
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -28,10 +28,11 @@ void Client::connectToServer() {
     struct sockaddr_in client_info = {0};
     client_info.sin_family = AF_INET;
     client_info.sin_addr.s_addr = inet_addr("127.0.0.1"); 
-    client_info.sin_port = htons(1337);
+    client_info.sin_port = htons(port);
     socklen_t client_info_len = sizeof(client_info);
     sfd_ = socket(AF_INET, SOCK_STREAM, 0);
-    int t = connect(sfd_, (struct sockaddr*)&client_info, client_info_len);
+    connect(sfd_, (struct sockaddr*)&client_info, client_info_len);
+    return *this;
 }
 
 void Client::act() {
@@ -63,6 +64,8 @@ void Client::act() {
 
 std::string Client::getMessageFromEvent(const std::string& default_msg) {
     std::string to_send = default_msg;
+    static std::string prev_to_send = default_msg;
+
     std::pair<std::string, Point> caught;
     SDL_Event event;
     int x, y;
@@ -74,10 +77,12 @@ std::string Client::getMessageFromEvent(const std::string& default_msg) {
         case SDL_MOUSEBUTTONDOWN:
             SDL_GetMouseState(&x, &y);
             caught = drawer_->catchClick(x, y);
+            //prev_to_send = to_send;
             to_send = caught.first + " " + std::string(caught.second);
             break;
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_a) {
+                to_send = prev_to_send;
             }
             break;
         default:

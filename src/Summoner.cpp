@@ -20,7 +20,7 @@ void Summoner::summon() {
         return;
     }
 
-    auto ability = terrain->getAcademy()[summoned_school_][summoned_ability_];
+    decltype(auto) ability = terrain->getAcademy()[summoned_school_][summoned_ability_];
     if (ability.getEnergyCost() > cur_energy_) {
         return;
     }
