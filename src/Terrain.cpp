@@ -3,6 +3,9 @@
 #include "Summoner.h"
 #include <fstream>
 
+#include <execution>
+#include <algorithm>
+
 
 void Terrain::init(const std::string& file_academy, const std::string& file_terrain) {
     std::ifstream ifs(file_academy);
@@ -14,9 +17,12 @@ void Terrain::init(const std::string& file_academy, const std::string& file_terr
 
 void Terrain::goToTheNextIteration() {
     map_.clearCorpses();
-    for (auto&& squad : map_) {
-        squad->act();
-    }
+    
+    //std::for_each(std::execution::par, st)
+    std::for_each(std::execution::par, std::begin(map_), std::end(map_), [](auto&& squad) { squad->act(); });
+    //for (auto&& squad : map_) {
+    //    squad->act();
+    //}
 }
 
 void Terrain::linkSquad(std::shared_ptr<Entity> e, Point where) {

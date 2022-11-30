@@ -1,0 +1,58 @@
+﻿cmake_minimum_required (VERSION 3.8)
+set(FREETYPE_LIBRARY "C:/Users/Vadim/freetype/lib/")
+set(FREETYPE_INCLUDE_DIRS "C:/Users/Vadim/freetype/include/freetype2")
+set(CMAKE_MODULE_PATH "C:/Users/Vadim/source/repos/CMakeProject3")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+
+project(summoners)
+
+set(CMAKE_CXX_STANDARD 20)
+set(SRC server.cpp server/Game.cpp server/Server.cpp server/Player.cpp)
+add_subdirectory(src)
+
+add_executable(server ${SRC})
+target_link_libraries(server game wsock32 ws2_32)
+
+include(FetchContent)
+
+
+FetchContent_Declare(
+    SDL2
+    GIT_REPOSITORY  https://github.com/libsdl-org/SDL
+    GIT_TAG         release-2.26.0
+    GIT_PROGRESS    TRUE
+)
+
+FetchContent_Declare(
+    SDL2ttf
+    GIT_REPOSITORY  https://github.com/libsdl-org/SDL_ttf
+    GIT_TAG         release-2.20.1
+    GIT_PROGRESS    TRUE
+)
+
+FetchContent_MakeAvailable(SDL2 SDL2ttf)
+
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR})
+add_executable(client client.cpp client/Client.cpp client/Drawer.cpp client/MapWidget.cpp client/MenuWidget.cpp client/Point.cpp client/SerializeWidget.cpp)
+
+target_link_libraries(client wsock32 ws2_32 SDL2main SDL2 SDL2ttf)
+
+option(MY_PROJECT_TESTS "Build unit tests" ON)
+
+if(MY_PROJECT_TESTS)
+    enable_testing()
+endif()
+
+FetchContent_Declare(
+  googletest
+  # Specify the commit you depend on and update it regularly.
+  URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+add_executable(testing exampletest.cpp)
+target_link_libraries(testing gtest_main game)
+add_test(NAME nametest COMMAND testing)

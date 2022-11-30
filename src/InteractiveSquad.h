@@ -65,5 +65,6 @@ public:
     }
 
     double getActingAngle() const;
+    void setActingAngle(double);
 };
 

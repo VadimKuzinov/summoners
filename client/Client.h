@@ -9,6 +9,9 @@ private:
     int sfd_ = -1;
 
 public:
+    Client();
+    ~Client();
+
     Client& createDrawer(int width, int height, const std::string& cfg_filename) {
         drawer_ = std::make_unique<Drawer>(width, height, cfg_filename);
         return *this;

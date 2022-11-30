@@ -17,3 +17,8 @@ double InteractiveSquad::getActingAngle() const {
     return result;
 }
 
+void InteractiveSquad::setActingAngle(double radians) {
+    auto coords = getCoords();
+    double inf_cf = 100000;
+    setTargetCoords({ coords.x + inf_cf * std::cos(radians), coords.y + inf_cf * std::sin(radians) });
+}

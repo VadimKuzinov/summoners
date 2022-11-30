@@ -20,11 +20,24 @@
 #include <chrono>
 
 
-Client& Client::connectToServerOnPort(unsigned short port) {
+Client::Client() {
 #ifdef _WIN32
     WSADATA wsaData;
-    WSAStartup(MAKEWORD(2,2), &wsaData);
+    WSAStartup(MAKEWORD(2, 2), &wsaData);
 #endif
+}
+
+Client::~Client() {
+#ifdef _WIN32
+    shutdown(sfd_, SD_BOTH);
+    closesocket(sfd_);
+    WSACleanup();
+#else
+    close(sfd_);
+#endif
+}
+
+Client& Client::connectToServerOnPort(unsigned short port) {
     struct sockaddr_in client_info = {0};
     client_info.sin_family = AF_INET;
     client_info.sin_addr.s_addr = inet_addr("127.0.0.1"); 
@@ -36,17 +49,14 @@ Client& Client::connectToServerOnPort(unsigned short port) {
 }
 
 void Client::act() {
-    std::string default_msg = "none 0 0";
+    std::string default_msg = "";
     char buf[10000];
-    using frames = std::chrono::duration<int64_t, std::ratio<1, 64>>;
-    auto next_frame = std::chrono::system_clock::now() + frames{1};
+    using frames = std::chrono::duration<int64_t, std::ratio<1, 60>>;
+    auto next_frame = std::chrono::time_point_cast<frames>(std::chrono::system_clock::now()) + frames{1};
     std::string to_send;
-    send(sfd_, default_msg.c_str(), 100, 0);
     int received_bytes = 0;
     while (true) {
         received_bytes = recv(sfd_, buf, 10000, 0);
-            
-        //std::cout << "Receieved:\n" << buf << std::endl;
 
         if (received_bytes == 10000) {
             handleData(buf);
@@ -58,17 +68,18 @@ void Client::act() {
         }
 
         to_send = getMessageFromEvent(default_msg);
-        if (to_send == "") {
+
+        if (to_send == "EXIT") {
             break;
         }
-
-        send(sfd_, to_send.c_str(), 100, 0);
+        if (to_send != default_msg) {
+            send(sfd_, to_send.c_str(), 100, 0);
+        }
     }
 }
 
 std::string Client::getMessageFromEvent(const std::string& default_msg) {
     std::string to_send = default_msg;
-    //static std::string prev_to_send = default_msg;
 
     std::pair<std::string, Point> caught;
     SDL_Event event;
@@ -76,21 +87,42 @@ std::string Client::getMessageFromEvent(const std::string& default_msg) {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
         case SDL_QUIT:
-            to_send = "";
+            to_send = "EXIT";
             break;
         case SDL_MOUSEBUTTONDOWN:
             SDL_GetMouseState(&x, &y);
             caught = drawer_->catchClick(x, y);
-            //prev_to_send = to_send;
             to_send = caught.first + " " + std::string(caught.second);
             break;
         case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_a) {
-      //          to_send = prev_to_send;
+            switch (event.key.keysym.sym) {
+            case SDLK_1:
+                to_send = "menu 0 0";
+                break;
+            case SDLK_2:
+                to_send = "menu 0 1";
+                break;
+            case SDLK_3:
+                to_send = "menu 0 2";
+                break;
+            case SDLK_r:
+                to_send = "reset_active 0 0";
+                break;
+            case SDLK_w:
+                to_send = "active 0 1";
+                break;
+            case SDLK_a:
+                to_send = "active -1 0";
+                break;
+            case SDLK_s:
+                to_send = "active 0 -1";
+                break;
+            case SDLK_d:
+                to_send = "active 1 0";
+                break;
+            default:
+                break;
             }
-            break;
-        default:
-            break;
         }
     }
 

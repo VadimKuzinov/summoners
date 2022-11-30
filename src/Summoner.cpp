@@ -12,7 +12,7 @@ void Summoner::summon() {
     auto terrain = getTerrain();
 
     auto distance = Point::distance(coords, target_coords);
-    if (distance > summon_range_) {
+    if (distance > summon_range_ || terrain->getMap()[target_coords] != nullptr) {
         return;
     }
 

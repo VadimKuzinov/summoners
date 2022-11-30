@@ -13,14 +13,14 @@ void Player::catchClick(std::string type, Point where) {
             setActive(where);
         }
         else if (active_ == terrain_->getMap()[where]) {
-            active_ = nullptr;
+            resetActive();
         }
         else {
             auto casted = std::dynamic_pointer_cast<InteractiveSquad>(active_);
             if (casted == nullptr || (casted != getSummoner() && casted->getSummoner() != summoner_)) {
                 return;
             }
-            
+
             casted->setTargetCoords(where);
             casted->setCaptured(terrain_->getMap()[where]);
         }
@@ -55,6 +55,36 @@ void Player::catchClick(std::string type, Point where) {
                 summoner_->setSummonedAbility(ability_names[number_of_option]);
                 chosen_school_ = "";
             }
+        }
+    }
+    else if (type == "reset_active") {
+        resetActive();
+    }
+    else if (type == "active") {
+        if (active_ == nullptr || typeid(*active_) == typeid(Obstacle)) {
+            return;
+        }
+
+        double delta = Point::pi / 8;
+        auto max_w = terrain_->getMap().getWidth();
+        auto max_h = terrain_->getMap().getHeight();
+
+        auto coords = active_->getCoords();
+        auto casted = std::static_pointer_cast<InteractiveSquad>(active_);
+        auto acting_angle = casted->getActingAngle();
+
+        if (where.x == -1) {
+            casted->setActingAngle(acting_angle - delta);
+        }
+        else if (where.x == 1) {
+            casted->setActingAngle(acting_angle + delta);
+        }
+
+        if (where.y == -1) {
+            casted->setActingAngle(-Point::pi / 2);
+        }
+        else if (where.y == 1) {
+            casted->setActingAngle(Point::pi / 2);
         }
     }
 }
